@@ -1,122 +1,83 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import './App.css'
+import ProfileGate from './components/ProfileGate'
+import Leaderboard from './components/Leaderboard'
+import ProfilePage from './components/ProfilePage'
+import FixturesResults from './components/FixturesResults'
+import BetCentral from './components/BetCentral'
+import { useSession } from './session/SessionContext'
 
-function App() {
-  const [count, setCount] = useState(0)
+const TABS = [
+  { id: 'leaderboard', label: 'Leaderboard' },
+  { id: 'profile', label: 'Profile' },
+  { id: 'fixtures', label: 'Fixtures & Results' },
+  { id: 'bet-central', label: 'Bet Central' },
+]
+
+function Home() {
+  const { profile, clearProfile } = useSession()
+  const [tab, setTab] = useState('leaderboard')
+  // Bumped whenever a bet/deposit/fixture changes so dependent views reload.
+  const [refreshKey, setRefreshKey] = useState(0)
+  const bump = () => setRefreshKey((k) => k + 1)
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
+    <div className="min-h-screen bg-slate-950 text-slate-100">
+      <header className="sticky top-0 z-30 border-b border-slate-800 bg-slate-950/80 backdrop-blur">
+        <div className="mx-auto flex max-w-3xl items-center justify-between gap-3 px-4 py-3 sm:px-6 sm:py-4">
+          <div className="min-w-0">
+            <h1 className="flex items-center gap-2 font-bold tracking-tight">
+              <span className="text-base sm:text-lg">⚽ Daff</span>
+              <span className="rounded bg-emerald-500/15 px-1.5 py-0.5 text-xs font-semibold text-emerald-400">
+                FIFA WC
+              </span>
+            </h1>
+            <p className="truncate text-xs text-slate-500 sm:text-sm">
+              Signed in as {profile.display_name}
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={clearProfile}
+            className="shrink-0 rounded-lg px-3 py-1.5 text-xs text-slate-400 ring-1 ring-slate-700 transition hover:text-slate-200 hover:ring-slate-500 sm:text-sm"
+          >
+            Switch
+          </button>
         </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
+      </header>
 
-      <div className="ticks"></div>
+      <main className="mx-auto max-w-3xl px-4 py-6 sm:px-6 sm:py-8">
+        <nav className="mb-6 -mx-4 flex gap-1 overflow-x-auto px-4 pb-1 [scrollbar-width:none] sm:mx-0 sm:flex-wrap sm:px-0 [&::-webkit-scrollbar]:hidden">
+          {TABS.map((t) => (
+            <button
+              key={t.id}
+              type="button"
+              onClick={() => setTab(t.id)}
+              className={`shrink-0 rounded-full px-4 py-1.5 text-sm font-medium transition ${
+                tab === t.id
+                  ? 'bg-emerald-500 text-slate-950'
+                  : 'bg-slate-900 text-slate-400 ring-1 ring-slate-800 hover:text-slate-200'
+              }`}
+            >
+              {t.label}
+            </button>
+          ))}
+        </nav>
 
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
+        {tab === 'leaderboard' && <Leaderboard refreshKey={refreshKey} />}
+        {tab === 'profile' && <ProfilePage refreshKey={refreshKey} />}
+        {tab === 'fixtures' && <FixturesResults onChange={bump} />}
+        {tab === 'bet-central' && (
+          <BetCentral refreshKey={refreshKey} onChange={bump} />
+        )}
+      </main>
+    </div>
   )
+}
+
+function App() {
+  const { profile } = useSession()
+  if (!profile) return <ProfileGate />
+  return <Home />
 }
 
 export default App

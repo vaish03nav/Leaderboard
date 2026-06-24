@@ -254,3 +254,18 @@ These are the core "things" the app stores. Everything on screen is **derived** 
 **Effect on leaderboard and graphs:** Past bets are treated identically to settled live bets once logged — they feed into profit calculations, the balance-over-time graph, and all leaderboard metrics. The graph will reflect the correct chronological order based on the date the user provides.
 
 **Admin note:** Admin can edit or delete any past bet, same as live bets.
+
+---
+
+## 15. Match Dropdown — Bet Logging Form (Post-M2, implement after M3)
+
+**Status:** Deferred — to be built after the leaderboard is working.
+
+**Behaviour:**
+- The match selector in the "Log a bet" form is a scrollable dropdown listing all World Cup fixtures.
+- On open, the dropdown defaults to the current date so the user lands on today's matches immediately.
+- The user can scroll up to see past matches and scroll down to see future matches.
+- Fixtures are grouped by date (e.g. "25 Jun", "26 Jun") as section headers inside the dropdown.
+- Each option shows: Home Team vs Away Team + kickoff time (in IST).
+- Past matches show their final score alongside the team names.
+- For past bets (the Live/Past toggle from Section 14), the same dropdown is used but all matches are available regardless of date, since the user may be logging a bet from any point in the tournament.
