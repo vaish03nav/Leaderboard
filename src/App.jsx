@@ -35,13 +35,23 @@ function Home() {
               Signed in as {profile.display_name}
             </p>
           </div>
-          <button
-            type="button"
-            onClick={clearProfile}
-            className="shrink-0 rounded-lg px-3 py-1.5 text-xs text-slate-400 ring-1 ring-slate-700 transition hover:text-slate-200 hover:ring-slate-500 sm:text-sm"
-          >
-            Switch
-          </button>
+          <div className="flex shrink-0 items-center gap-2">
+            <a
+              href="https://stake.ac/sports/soccer"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="rounded-lg bg-emerald-500 px-3 py-1.5 text-xs font-semibold text-slate-950 transition hover:bg-emerald-400 sm:text-sm"
+            >
+              Stake ↗
+            </a>
+            <button
+              type="button"
+              onClick={clearProfile}
+              className="rounded-lg px-3 py-1.5 text-xs text-slate-400 ring-1 ring-slate-700 transition hover:text-slate-200 hover:ring-slate-500 sm:text-sm"
+            >
+              Switch
+            </button>
+          </div>
         </div>
       </header>
 

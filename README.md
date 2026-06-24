@@ -1,16 +1,59 @@
-# React + Vite
+# Daff × FIFA WC — Group Stake Tracker
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+A private web app for a small group of friends to log bets placed on Stake
+during the 2026 FIFA World Cup and track performance on a shared leaderboard.
+It's a **tracking tool only** — it holds no money and sets no odds. All data is
+self-reported.
 
-Currently, two official plugins are available:
+## Stack
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- **Frontend:** React + Vite, Tailwind CSS v4
+- **Backend / DB:** Supabase (Postgres + auto REST API + Edge Functions)
+- **Charts:** Recharts
+- **Football data:** football-data.org (via a Supabase Edge Function)
+- **Hosting:** Vercel
+- **Currency:** INR (₹) only
 
-## React Compiler
+## Local development
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+```bash
+npm install
+cp .env.example .env   # then fill in your Supabase values
+npm run dev            # http://localhost:5173
+```
 
-## Expanding the Oxlint configuration
+### Environment variables
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+| Variable | Where | Notes |
+|---|---|---|
+| `VITE_SUPABASE_URL` | `.env` (and Vercel) | Project URL — safe to expose |
+| `VITE_SUPABASE_PUBLISHABLE_KEY` | `.env` (and Vercel) | Publishable key — safe to expose |
+| `FOOTBALL_DATA_TOKEN` | Supabase Edge Function **secret** | Server-side only; never in the frontend |
+
+The `FOOTBALL_DATA_TOKEN` powers the `sync-fixtures` Edge Function (fixtures &
+results). Set it in the Supabase dashboard → Edge Functions → Secrets, or:
+
+```bash
+npx supabase secrets set FOOTBALL_DATA_TOKEN=<token> --project-ref <project-ref>
+```
+
+## Deploy to Vercel
+
+Vercel auto-detects Vite (build: `npm run build`, output: `dist`). From the
+project directory:
+
+```bash
+npx vercel            # first run: log in + link the project
+npx vercel --prod     # production deploy
+```
+
+Then add the two `VITE_*` env vars in **Vercel → Project → Settings →
+Environment Variables** and redeploy.
+
+## Build
+
+```bash
+npm run build         # production build into dist/
+npm run preview       # preview the production build locally
+npm run lint          # oxlint
+```
