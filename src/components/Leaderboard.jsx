@@ -20,6 +20,32 @@ function signedINR(n) {
   return s
 }
 
+// Format a row's value for whichever metric is selected in "Sort by".
+// Signed metrics (net profit, profit %) are tinted by sign; the rest are neutral.
+function metricDisplay(row, key) {
+  switch (key) {
+    case 'netProfit':
+      return { value: signedINR(row.netProfit), signed: row.netProfit }
+    case 'profitPct':
+      return { value: pct(row.profitPct), signed: row.netProfit }
+    case 'largestWin':
+      return { value: formatINR(row.largestWin), signed: null }
+    case 'totalStaked':
+      return { value: formatINR(row.totalStaked), signed: null }
+    case 'winRate':
+      return { value: pct(row.winRate), signed: null }
+    default:
+      return { value: '', signed: null }
+  }
+}
+
+function toneClass(signed) {
+  if (signed == null) return 'text-slate-100'
+  if (signed > 0) return 'text-emerald-400'
+  if (signed < 0) return 'text-red-400'
+  return 'text-slate-300'
+}
+
 export default function Leaderboard({ refreshKey }) {
   const { profile: me } = useSession()
   const [profiles, setProfiles] = useState([])
@@ -105,6 +131,9 @@ export default function Leaderboard({ refreshKey }) {
         {rows.map((r, i) => {
           const isMe = r.profile.id === me.id
           const topAccent = i < 3 ? RANK_ACCENT[i] : 'ring-slate-800'
+          const metric = metricDisplay(r, sortKey)
+          const sortLabel =
+            SORT_OPTIONS.find((o) => o.id === sortKey)?.label ?? ''
           return (
             <div
               key={r.profile.id}
@@ -128,27 +157,11 @@ export default function Leaderboard({ refreshKey }) {
                   </p>
                 </div>
                 <div className="text-right">
-                  <p
-                    className={`font-semibold ${
-                      r.netProfit > 0
-                        ? 'text-emerald-400'
-                        : r.netProfit < 0
-                          ? 'text-red-400'
-                          : 'text-slate-300'
-                    }`}
-                  >
-                    {signedINR(r.netProfit)}
+                  <p className={`text-lg font-semibold ${toneClass(metric.signed)}`}>
+                    {metric.value}
                   </p>
-                  <p className="text-sm text-slate-500">{pct(r.profitPct)}</p>
+                  <p className="text-xs text-slate-500">{sortLabel}</p>
                 </div>
-              </div>
-
-              <div className="mt-3 grid grid-cols-2 gap-x-5 gap-y-1 text-sm text-slate-400 sm:grid-cols-4">
-                <span>Deposited {formatINR(r.totalDeposited)}</span>
-                <span>Staked {formatINR(r.totalStaked)}</span>
-                <span>Balance {formatINR(r.balance)}</span>
-                <span>Largest win {formatINR(r.largestWin)}</span>
-                <span>Win rate {pct(r.winRate)}</span>
               </div>
             </div>
           )

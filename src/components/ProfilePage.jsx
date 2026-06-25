@@ -1,11 +1,11 @@
 import { useEffect, useMemo, useState } from 'react'
 import { listProfiles } from '../api/profiles'
-import { listBetsByProfile } from '../api/bets'
+import { listBetsByProfile, listAllBets } from '../api/bets'
 import { listDepositsByProfile } from '../api/deposits'
 import { useSession } from '../session/SessionContext'
 import { formatINR } from '../lib/format'
-import { profileSummary, balanceOverTime } from '../lib/profileStats'
-import BalanceChart from './BalanceChart'
+import { profileSummary, profitOverTime } from '../lib/profileStats'
+import ProfitChart from './ProfitChart'
 import LogDepositForm from './LogDepositForm'
 
 const FILTERS = ['all', 'pending', 'won', 'lost', 'void']
@@ -37,6 +37,7 @@ export default function ProfilePage({ refreshKey }) {
   const [profiles, setProfiles] = useState([])
   const [selectedId, setSelectedId] = useState(me.id)
   const [bets, setBets] = useState([])
+  const [allBets, setAllBets] = useState([])
   const [deposits, setDeposits] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
@@ -54,13 +55,15 @@ export default function ProfilePage({ refreshKey }) {
       setLoading(true)
       setError(null)
       try {
-        const [b, d] = await Promise.all([
+        const [b, d, all] = await Promise.all([
           listBetsByProfile(selectedId),
           listDepositsByProfile(selectedId),
+          listAllBets(), // for the multi-user profit comparison chart
         ])
         if (!cancelled) {
           setBets(b)
           setDeposits(d)
+          setAllBets(all)
         }
       } catch (e) {
         if (!cancelled) setError(e.message)
@@ -80,9 +83,9 @@ export default function ProfilePage({ refreshKey }) {
     () => profileSummary(bets, deposits),
     [bets, deposits],
   )
-  const series = useMemo(
-    () => balanceOverTime(bets, deposits),
-    [bets, deposits],
+  const profitSeries = useMemo(
+    () => profitOverTime(profiles, allBets),
+    [profiles, allBets],
   )
   const visibleBets = useMemo(
     () => (filter === 'all' ? bets : bets.filter((b) => b.status === filter)),
@@ -177,9 +180,18 @@ export default function ProfilePage({ refreshKey }) {
           </div>
 
           <section className="mt-8">
-            <h3 className="mb-3 font-semibold">Balance over time</h3>
+            <div className="mb-3 flex flex-wrap items-baseline justify-between gap-2">
+              <h3 className="font-semibold">Profit over time</h3>
+              <span className="text-xs text-slate-500">
+                {selectedName} highlighted · others shown faintly
+              </span>
+            </div>
             <div className="rounded-xl bg-slate-900 p-4 ring-1 ring-slate-800">
-              <BalanceChart data={series} />
+              <ProfitChart
+                data={profitSeries}
+                profiles={profiles}
+                selectedId={selectedId}
+              />
             </div>
           </section>
 

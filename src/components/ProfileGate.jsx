@@ -78,7 +78,10 @@ export default function ProfileGate() {
     <div className="min-h-screen bg-slate-950 text-slate-100">
       <div className="mx-auto max-w-3xl px-6 py-16">
         <header className="text-center">
-          <h1 className="text-3xl font-bold tracking-tight">
+          <p className="text-sm font-semibold uppercase tracking-widest text-emerald-400">
+            ⚽ Daff × FIFA WC 26
+          </p>
+          <h1 className="mt-2 text-3xl font-bold tracking-tight">
             Group Stake Tracker
           </h1>
           <p className="mt-2 text-slate-400">Who's playing? Pick your profile.</p>

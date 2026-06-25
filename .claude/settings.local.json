@@ -35,7 +35,14 @@
       "mcp__Claude_Preview__preview_start",
       "Bash(curl -s 'https://ajjxkkyjykptigxsaovp.supabase.co/rest/v1/matches?home_team=eq.Morocco&select=home_team,away_team,home_crest,away_crest' -H 'apikey: sb_publishable_sJjjhicKUT2_yaK2jA3YIA_ozPo-dZg' -H 'Authorization: Bearer sb_publishable_sJjjhicKUT2_yaK2jA3YIA_ozPo-dZg')",
       "Bash(curl -s -o /dev/null -w \"morocco.svg -> HTTP %{http_code}, type %{content_type}\\\\n\" \"https://crests.football-data.org/morocco.svg\")",
-      "Bash(curl -s -o /dev/null -w \"769.svg -> HTTP %{http_code}, type %{content_type}\\\\n\" \"https://crests.football-data.org/769.svg\")"
+      "Bash(curl -s -o /dev/null -w \"769.svg -> HTTP %{http_code}, type %{content_type}\\\\n\" \"https://crests.football-data.org/769.svg\")",
+      "Bash(npx vercel *)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(git push *)",
+      "Bash(python /tmp/balances.py)",
+      "Bash(python /tmp/abhi.py)",
+      "mcp__f0e3ab5a-4fa8-4a3b-9f75-d691c041c05f__execute_sql"
     ]
   }
 }

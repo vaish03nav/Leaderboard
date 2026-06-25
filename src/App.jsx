@@ -7,10 +7,10 @@ import BetCentral from './components/BetCentral'
 import { useSession } from './session/SessionContext'
 
 const TABS = [
-  { id: 'leaderboard', label: 'Leaderboard' },
-  { id: 'profile', label: 'Profile' },
-  { id: 'fixtures', label: 'Fixtures & Results' },
-  { id: 'bet-central', label: 'Bet Central' },
+  { id: 'leaderboard', label: 'Leaderboard', short: 'Ranks', icon: '🏆' },
+  { id: 'bet-central', label: 'Bet Central', short: 'Bets', icon: '🎯' },
+  { id: 'fixtures', label: 'Fixtures & Results', short: 'Fixtures', icon: '⚽' },
+  { id: 'profile', label: 'Profile', short: 'Profile', icon: '👤' },
 ]
 
 function Home() {
@@ -55,8 +55,10 @@ function Home() {
         </div>
       </header>
 
-      <main className="mx-auto max-w-3xl px-4 py-6 sm:px-6 sm:py-8">
-        <nav className="mb-6 -mx-4 flex gap-1 overflow-x-auto px-4 pb-1 [scrollbar-width:none] sm:mx-0 sm:flex-wrap sm:px-0 [&::-webkit-scrollbar]:hidden">
+      {/* Extra bottom padding on mobile so content clears the bottom nav bar. */}
+      <main className="mx-auto max-w-3xl px-4 pb-24 pt-6 sm:px-6 sm:pb-8 sm:pt-8">
+        {/* Desktop / tablet: top pill nav */}
+        <nav className="mb-6 hidden gap-1 sm:flex sm:flex-wrap">
           {TABS.map((t) => (
             <button
               key={t.id}
@@ -74,12 +76,29 @@ function Home() {
         </nav>
 
         {tab === 'leaderboard' && <Leaderboard refreshKey={refreshKey} />}
-        {tab === 'profile' && <ProfilePage refreshKey={refreshKey} />}
-        {tab === 'fixtures' && <FixturesResults onChange={bump} />}
         {tab === 'bet-central' && (
           <BetCentral refreshKey={refreshKey} onChange={bump} />
         )}
+        {tab === 'fixtures' && <FixturesResults onChange={bump} />}
+        {tab === 'profile' && <ProfilePage refreshKey={refreshKey} />}
       </main>
+
+      {/* Mobile: fixed bottom navigation bar */}
+      <nav className="fixed inset-x-0 bottom-0 z-30 grid grid-cols-4 border-t border-slate-800 bg-slate-950/95 backdrop-blur sm:hidden">
+        {TABS.map((t) => (
+          <button
+            key={t.id}
+            type="button"
+            onClick={() => setTab(t.id)}
+            className={`flex flex-col items-center gap-0.5 py-2 text-[11px] font-medium transition ${
+              tab === t.id ? 'text-emerald-400' : 'text-slate-400'
+            }`}
+          >
+            <span className="text-lg leading-none">{t.icon}</span>
+            {t.short}
+          </button>
+        ))}
+      </nav>
     </div>
   )
 }
